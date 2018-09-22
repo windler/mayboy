@@ -8,6 +8,10 @@ import (
 	"net/http"
 )
 
+type Project struct {
+	Name string
+	ID   int
+}
 type Client struct {
 	client *http.Client
 	url    string
