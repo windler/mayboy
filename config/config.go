@@ -14,6 +14,7 @@ type Config struct {
 	Max                 int               `yaml:"maxIssues"`
 	Projects            map[string]int    `yaml:"projects"`
 	ProjectAccessTokens map[string]string `yaml:"projectAccessTokens"`
+	IncludeAll          bool              `yaml:"includeAll"`
 }
 
 func Parse() Config {

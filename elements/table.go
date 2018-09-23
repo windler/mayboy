@@ -49,6 +49,8 @@ func (t *IssueTable) registerListeners() {
 	t.em.Listen(events.ProjectSelected, func() {
 		t.table.SetSelectable(true, false)
 
+		t.refreshTable()
+
 		issues := t.issueRetriver.GetIssuesForCurrentProject()
 		if len(issues) > 0 {
 			t.table.Select(1, 0)

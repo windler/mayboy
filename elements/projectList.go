@@ -16,8 +16,18 @@ func CreateProjectList(projects map[string][]gitlab.Issue, em *events.EventManag
 	projectList := tview.NewList()
 	projectList.ShowSecondaryText(false)
 
+	if _, found := projects["All"]; found {
+		projectList.AddItem("All", "", '0', func() {
+			em.Fire(events.ProjectSelected)
+		})
+	}
+
 	i := '1'
 	for project := range projects {
+		if project == "All" {
+			continue
+		}
+
 		projectList.AddItem(project, "", i, func() {
 			em.Fire(events.ProjectSelected)
 		})
