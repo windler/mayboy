@@ -18,6 +18,10 @@ func CreateProjectList(projects map[string][]gitlab.Issue, em *events.EventManag
 	projectList := tview.NewList()
 	projectList.ShowSecondaryText(false)
 
+	projectList.SetDoneFunc(func() {
+		em.Fire(events.ExitRequested)
+	})
+
 	if _, found := projects["All"]; found {
 		projectList.AddItem("All", "", '0', func() {
 			em.Fire(events.ProjectSelected)
@@ -35,10 +39,6 @@ func CreateProjectList(projects map[string][]gitlab.Issue, em *events.EventManag
 		})
 		i++
 	}
-
-	projectList.AddItem("Quit", "", 'q', func() {
-		em.Fire(events.ExitRequested)
-	})
 
 	return ProjectList{
 		projectList: projectList,

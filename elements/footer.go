@@ -1,56 +1,92 @@
 package elements
 
 import (
+	"fmt"
+
+	"github.com/gdamore/tcell"
 	"github.com/rivo/tview"
 	"github.com/windler/mayboy/events"
-	"github.com/windler/mayboy/gitlab"
 )
 
-//Footer show contextual information
+//Footer shows key hints
 type Footer struct {
-	footer        *tview.TextView
-	em            *events.EventManager
-	issueRetriver SelectedIssueRetriever
+	footer *tview.TextView
+	em     *events.EventManager
 }
 
-//SelectedIssueRetriever return the current selected issue
-type SelectedIssueRetriever interface {
-	GetSelectedIssue() *gitlab.Issue
-}
-
-//NewFooter creates a footer
-func NewFooter(em *events.EventManager, issueRetriver SelectedIssueRetriever) Footer {
+//NewFooter creates a new Header
+func NewFooter(em *events.EventManager) Footer {
 	footer := tview.NewTextView()
-	footer.SetBorderPadding(1, 0, 0, 0)
+	footer.SetBackgroundColor(tcell.ColorLightGray)
+	footer.SetTextColor(tcell.ColorBlack)
+	footer.SetTextAlign(tview.AlignRight)
 
 	f := Footer{
-		footer:        footer,
-		em:            em,
-		issueRetriver: issueRetriver,
+		footer: footer,
+		em:     em,
 	}
 
 	f.registerListeners()
+	f.showProjectListText()
 
 	return f
 }
 
-func (f *Footer) registerListeners() {
-	f.em.Listen(events.ProjectSelected, f.showWebURL)
-	f.em.Listen(events.IssueTableLineSelectionChanged, f.showWebURL)
-	f.em.Listen(events.IssueTableRefreshed, f.showWebURL)
+func (f *Footer) showProjectListText() {
+	f.footer.SetText(getCommandString([]cmd{
+		cmd{
+			cmd:  "UP",
+			desc: "Move up",
+		},
+		cmd{
+			cmd:  "DOWN",
+			desc: "Move down",
+		},
+		cmd{
+			cmd:  "ENTER",
+			desc: "Select project",
+		},
+		cmd{
+			cmd:  "<n>",
+			desc: "Select project (n)",
+		},
+		cmd{
+			cmd:  "ESC",
+			desc: "Quit application",
+		},
+	}))
+}
 
-	f.em.Listen(events.IssueTableFocusLost, func() {
-		f.footer.SetText("")
+func (f *Footer) registerListeners() {
+	f.em.Listen(events.IssueTableFocusLost, f.showProjectListText)
+	f.em.Listen(events.ProjectSelected, func() {
+		f.footer.SetText(getCommandString([]cmd{
+			cmd{
+				cmd:  "UP",
+				desc: "Move up",
+			},
+			cmd{
+				cmd:  "DOWN",
+				desc: "Move down",
+			},
+			cmd{
+				cmd:  "ESC",
+				desc: "Go back to project list",
+			},
+		}))
 	})
 }
 
-func (f *Footer) showWebURL() {
-	issue := f.issueRetriver.GetSelectedIssue()
-	if issue != nil {
-		f.footer.SetText(issue.WebURL)
-	} else {
-		f.footer.SetText("")
+type cmd struct {
+	cmd, desc string
+}
+
+func getCommandString(commands []cmd) string {
+	result := ""
+	for _, c := range commands {
+		result += fmt.Sprintf("%s: %s\t", c.cmd, c.desc)
 	}
+	return result
 }
 
 //GetPrimitive returns the rivo/tview primtive

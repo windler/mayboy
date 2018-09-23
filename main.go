@@ -16,17 +16,19 @@ func main() {
 	em := events.NewEventManager()
 	app := tview.NewApplication()
 
-	hint := elements.NewHint(em)
+	header := elements.NewHeader()
 
 	projectList := elements.CreateProjectList(issues, em)
 	issueTable := elements.CreateIssueTable(em, &projectList)
+	tableInfo := elements.NewTableInfo(em, &issueTable)
 
-	footer := elements.NewFooter(em, &issueTable)
+	footer := elements.NewFooter(em)
 
 	grid := elements.CreateGrid(
+		header.GetPrimitive(),
 		projectList.GetPrimitive(),
 		issueTable.GetPrimitive(),
-		hint.GetPrimitive(),
+		tableInfo.GetPrimitive(),
 		footer.GetPrimitive(),
 	)
 
