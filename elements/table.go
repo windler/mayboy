@@ -10,16 +10,19 @@ import (
 	"github.com/windler/mayboy/events"
 )
 
+//ProjectIssuesRetriever return the issues for current selected project
 type ProjectIssuesRetriever interface {
 	GetIssuesForCurrentProject() []gitlab.Issue
 }
 
+//IssueTable shows issues for a project in a table
 type IssueTable struct {
 	table         *tview.Table
 	em            *events.EventManager
 	issueRetriver ProjectIssuesRetriever
 }
 
+//CreateIssueTable creates a new IssueTable
 func CreateIssueTable(em *events.EventManager, issueRetriver ProjectIssuesRetriever) IssueTable {
 	issueTable := tview.NewTable()
 
@@ -105,6 +108,7 @@ func (t *IssueTable) tableSelection(row int, column int) {
 	}
 }
 
+//GetSelectedIssue implements SelectedIssueRetriever
 func (t *IssueTable) GetSelectedIssue() *gitlab.Issue {
 	issues := t.issueRetriver.GetIssuesForCurrentProject()
 	row, _ := t.table.GetSelection()
@@ -116,6 +120,7 @@ func (t *IssueTable) GetSelectedIssue() *gitlab.Issue {
 	return &issues[row]
 }
 
+//GetPrimitive returns the rivo/tview primtive
 func (t *IssueTable) GetPrimitive() tview.Primitive {
 	return t.table
 }

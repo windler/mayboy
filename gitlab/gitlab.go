@@ -8,16 +8,20 @@ import (
 	"net/http"
 )
 
+//Project prepresents a gitlab project
 type Project struct {
 	Name string
 	ID   int
 }
+
+//Client calls gitlab api
 type Client struct {
 	client *http.Client
 	url    string
 	token  string
 }
 
+//NewClient creates a new Client
 func NewClient(url, token string) Client {
 	return Client{
 		client: &http.Client{},
@@ -26,6 +30,7 @@ func NewClient(url, token string) Client {
 	}
 }
 
+//Issue represents a gitlab issue
 type Issue struct {
 	ID          int    `json:"id"`
 	ProjectID   int    `json:"project_id"`
@@ -42,6 +47,7 @@ type Issue struct {
 	WebURL string `json:"web_url"`
 }
 
+//GetIssues gets issues for a project
 func (c *Client) GetIssues(projectID int, max int) []Issue {
 	issues := &[]Issue{}
 

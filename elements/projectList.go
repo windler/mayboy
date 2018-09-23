@@ -6,12 +6,14 @@ import (
 	"github.com/windler/mayboy/gitlab"
 )
 
+//ProjectList lists all issue projects and represents the apps menu
 type ProjectList struct {
 	projectList *tview.List
 	em          *events.EventManager
 	projects    map[string][]gitlab.Issue
 }
 
+//CreateProjectList creates a new  ProjectList
 func CreateProjectList(projects map[string][]gitlab.Issue, em *events.EventManager) ProjectList {
 	projectList := tview.NewList()
 	projectList.ShowSecondaryText(false)
@@ -45,6 +47,7 @@ func CreateProjectList(projects map[string][]gitlab.Issue, em *events.EventManag
 	}
 }
 
+//GetIssuesForCurrentProject implements ProjectIssuesRetriever
 func (l *ProjectList) GetIssuesForCurrentProject() []gitlab.Issue {
 	currentItem := l.projectList.GetCurrentItem()
 	proj, _ := l.projectList.GetItemText(currentItem)
@@ -52,6 +55,7 @@ func (l *ProjectList) GetIssuesForCurrentProject() []gitlab.Issue {
 	return l.projects[proj]
 }
 
+//GetPrimitive returns the rivo/tview primtive
 func (l *ProjectList) GetPrimitive() tview.Primitive {
 	return l.projectList
 }

@@ -6,16 +6,19 @@ import (
 	"github.com/windler/mayboy/gitlab"
 )
 
+//Footer show contextual information
 type Footer struct {
 	footer        *tview.TextView
 	em            *events.EventManager
 	issueRetriver SelectedIssueRetriever
 }
 
+//SelectedIssueRetriever return the current selected issue
 type SelectedIssueRetriever interface {
 	GetSelectedIssue() *gitlab.Issue
 }
 
+//NewFooter creates a footer
 func NewFooter(em *events.EventManager, issueRetriver SelectedIssueRetriever) Footer {
 	footer := tview.NewTextView()
 	footer.SetBorderPadding(1, 0, 0, 0)
@@ -50,6 +53,7 @@ func (f *Footer) showWebURL() {
 	}
 }
 
+//GetPrimitive returns the rivo/tview primtive
 func (f *Footer) GetPrimitive() tview.Primitive {
 	return f.footer
 }

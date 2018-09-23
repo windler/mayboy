@@ -8,6 +8,7 @@ import (
 	yaml "gopkg.in/yaml.v2"
 )
 
+//Config represents the mayboy configuration
 type Config struct {
 	GitlabHost          string            `yaml:"gitlabHost"`
 	AccessToken         string            `yaml:"accessToken"`
@@ -17,6 +18,7 @@ type Config struct {
 	IncludeAll          bool              `yaml:"includeAll"`
 }
 
+//Parse creates a Config based on the ~/.mayboy file
 func Parse() Config {
 	usr, err := user.Current()
 	if err != nil {

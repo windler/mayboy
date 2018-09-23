@@ -8,11 +8,13 @@ import (
 	"github.com/windler/mayboy/config"
 )
 
+//ProjectIssues maps a Project to its issues
 type ProjectIssues struct {
 	project Project
 	issues  []Issue
 }
 
+//GetIssues gets all issues for all prpjects defined in Config
 func GetIssues(cfg config.Config) map[string][]Issue {
 	result := map[string][]Issue{}
 
