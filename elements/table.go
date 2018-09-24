@@ -117,7 +117,7 @@ func (t *IssueTable) GetSelectedIssue() *gitlab.Issue {
 		return nil
 	}
 
-	return &issues[row]
+	return &issues[row+1]
 }
 
 //GetPrimitive returns the rivo/tview primtive
